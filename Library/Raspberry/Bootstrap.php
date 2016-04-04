@@ -15,12 +15,18 @@ use Raspberry\Database\DatabaseAdapter;
 class Bootstrap
 {
     private $di;
-    private static $instance;
 
     public function __construct(DependencyInjection $di)
     {
         $this->di = $di;
-        self::$instance = $this;
+        $class = new \ReflectionClass(get_class());
+        $methods = $class->getMethods();
+        foreach ($methods as $method) {
+            if (substr($method->name, 0, 4) == 'init') {
+                $reflectionMethod = new \ReflectionMethod(__NAMESPACE__ . '\Bootstrap', $method->name);
+                echo $reflectionMethod->invoke($this);
+            }
+        }
     }
 
     public function initProfiler() {
@@ -42,16 +48,13 @@ class Bootstrap
         });
     }
 
-    public static function run(DependencyInjection $di)
+    public function initAssetsManager()
     {
-        $class = new \ReflectionClass(get_class());
-        $methods = $class->getMethods();
-        $bootstrap = new self($di);
-        foreach ($methods as $method) {
-            if (substr($method->name, 0, 4) == 'init') {
-                $reflectionMethod = new \ReflectionMethod(__NAMESPACE__ . '\Bootstrap', $method->name);
-                echo $reflectionMethod->invoke(self::$instance);
-            }
-        }
+        $this->di->set('application.assets_manager', function() {
+            return new Assets\AssetsManager(
+                $this->di->get('application.config')->assets
+            );
+        });
     }
+
 }

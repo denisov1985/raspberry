@@ -4,5 +4,19 @@
     "dbname": "test",
     "user":   "root",
     "pass":   ""
+  },
+  "assets": {
+    "js": {
+      "angular": [
+          "/Public/node_modules/angular/angular.min.js",
+          "/Public/node_modules/angular-resource/angular-resource.min.js",
+          "/Public/node_modules/angular-route/angular-route.min.js"
+      ],
+      "application": "/Public/assets/js/app"
+    },
+    "css": {
+      "bootstrap": "/Public/node_modules/bootstrap/dist/css/bootstrap.min.css",
+      "main": "/Public/assets/css"
+    }
   }
 }

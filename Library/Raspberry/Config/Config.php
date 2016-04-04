@@ -15,7 +15,7 @@ namespace Raspberry\Config;
  * Class Config
  * @package Raspberry
  */
-class Config
+class Config implements \Iterator
 {
     private $data;
 
@@ -74,5 +74,29 @@ class Config
         $this->data[$name] = $value;
     }
 
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    public function next()
+    {
+        next($this->data);
+    }
+
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
+
+    public function rewind()
+    {
+        reset($this->data);
+    }
 
 }

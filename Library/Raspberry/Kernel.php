@@ -26,7 +26,8 @@ class Kernel
     public function __construct(DependencyInjection $di)
     {
         $this->di = $di;
-        Bootstrap::run($di);
+        $bootstrap = new Bootstrap($di);
+        unset($bootstrap);
     }
 
     /**
@@ -38,7 +39,7 @@ class Kernel
     {
 
         $this->router = new Router($request);
-        $this->view   = new View($this->router);
+        $this->view   = new View($this->router, $this->di);
         $this->data   = $this->router->invoke();
         $content = $this->view->render($this->data);
         return new Response($content);

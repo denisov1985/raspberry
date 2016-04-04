@@ -14,10 +14,15 @@ namespace Raspberry;
 class Template extends Container
 {
     private $content;
+    private $scripts;
+    private $css;
 
     public function __construct(View $view, $data)
     {
         parent::__construct($data);
+        $assets = $view->getDi()->get('application.assets_manager');
+        $this->scripts = $assets->getJavaScripts();
+        $this->css     = $assets->getCss();
         ob_start();
         include $this->_getPath($view);
         $this->content = ob_get_clean();

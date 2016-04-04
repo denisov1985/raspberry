@@ -29,5 +29,3 @@ $request  = new Request();
 $response = $kernel->handle($request);
 $response->send();
 
-
-

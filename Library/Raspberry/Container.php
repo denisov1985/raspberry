@@ -11,7 +11,7 @@
 namespace Raspberry;
 
 
-class Container
+class Container implements \Iterator
 {
     private $data;
 
@@ -68,5 +68,30 @@ class Container
     function __set($name, $value)
     {
         $this->data[$name] = $value;
+    }
+
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    public function next()
+    {
+        next($this->data);
+    }
+
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
+
+    public function rewind()
+    {
+        reset($this->data);
     }
 }

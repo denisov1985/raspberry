@@ -17,17 +17,16 @@ class View
     private $template;
     private $layout;
     private $router;
+    private $di;
 
-    public function __construct(Router $router)
+    public function __construct(Router $router, DependencyInjection $di)
     {
         $this->router = $router;
+        $this->di     = $di;
     }
 
     public function render($data)
     {
-        if (!file_exists($this->_getTemplatePath())) {
-            throw new TemplateNotFoundException("Template not found");
-        }
         $template = new Template($this, $data);
         $content = $template->render();
         $layout = new Layout($this, [
@@ -45,12 +44,14 @@ class View
         return $this->router;
     }
 
-    private function _getTemplatePath() {
-        return realpath('..') . sprintf('/Application/Views/%s/%s.phtml', $this->router->getController(), $this->router->getAction());
+    /**
+     * @return mixed
+     */
+    public function getDi()
+    {
+        return $this->di;
     }
 
-    private function _getLayoutPath() {
-        return realpath('..') . '/Application/Views/layout.phtml';
-    }
+
 
 }

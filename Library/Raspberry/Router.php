@@ -28,8 +28,9 @@ class Router
 
     public function invoke()
     {
+        $controller = $this->_getControllerName();
         return call_user_func_array([
-            $this->_getControllerName(),
+            new $controller,
             $this->_getActionName()
         ], $this->arguments);
     }
