@@ -10,12 +10,8 @@
 
 namespace Raspberry;
 
-/**
- * Config
- * Class Config
- * @package Raspberry
- */
-class Config
+
+class Container
 {
     private $data;
 
@@ -59,7 +55,7 @@ class Config
     {
         if (!isset($this->data[$name])) {
             debug_backtrace();
-            throw new \Exception("Config '$name' not found");
+            throw new \Exception("Value '$name' not found");
         }
         return $this->data[$name];
     }
@@ -73,6 +69,4 @@ class Config
     {
         $this->data[$name] = $value;
     }
-
-
 }

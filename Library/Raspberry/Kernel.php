@@ -9,27 +9,39 @@
  */
 
 namespace Raspberry;
-
+use Raspberry\Exception\View\TemplateNotFoundException;
+use Raspberry\Http\Response;
+use Raspberry\Http\Request;
+use Raspberry\Router\ErrorRouter;
 
 class Kernel
 {
     private $di;
+    private $request;
+    private $response;
+    private $router;
+    private $view;
+    private $data;
 
     public function __construct(DependencyInjection $di)
     {
         $this->di = $di;
-        $this->_initBootstrap();
+        Bootstrap::run($di);
     }
 
-    private function _initBootstrap() {
-        $class = new \ReflectionClass(__NAMESPACE__ . '\Bootstrap');
-        $methods = $class->getMethods();
-        $bootstrap = new Bootstrap($this->di);
-        foreach ($methods as $method) {
-            if (substr($method->name, 0, 4) == 'init') {
-                $reflectionMethod = new \ReflectionMethod(__NAMESPACE__ . '\Bootstrap', $method->name);
-                echo $reflectionMethod->invoke($bootstrap);
-            }
-        }
+    /**
+     * Handle request
+     * @param Request $request
+     * @return Response
+     */
+    public function handle(Request $request)
+    {
+
+        $this->router = new Router($request);
+        $this->view   = new View($this->router);
+        $this->data   = $this->router->invoke();
+        $content = $this->view->render($this->data);
+        return new Response($content);
     }
+
 }

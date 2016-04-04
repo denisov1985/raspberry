@@ -9,6 +9,7 @@
  */
 
 use Raspberry\Kernel;
+use Raspberry\Http\Request;
 use Raspberry\DependencyInjection;
 
 define('ROOT_DIR', realpath('..'));
@@ -23,11 +24,10 @@ $loader->registerDirs([
     APP_DIR . '/Models'
 ]);
 
-$kernel = new Kernel(new DependencyInjection());
+$kernel   = new Kernel(new DependencyInjection());
+$request  = new Request();
+$response = $kernel->handle($request);
+$response->send();
 
-function prd($data) {
-    print_r($data);
-    die();
-}
 
 

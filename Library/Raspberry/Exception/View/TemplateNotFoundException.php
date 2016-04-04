@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *
@@ -8,12 +7,12 @@
  * @author     Dmytro Denysov dmytro.denysov@racingpost.com
  * @copyright  2016 Racing Post
  */
-class IndexController
+
+namespace Raspberry\Exception\View;
+
+use Raspberry\Exception\CommonException;
+
+class TemplateNotFoundException extends CommonException
 {
-    public function indexAction()
-    {
-        return [
-            'ololo' => 'trololo'
-        ];
-    }
+
 }

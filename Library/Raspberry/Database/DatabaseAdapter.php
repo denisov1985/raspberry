@@ -8,7 +8,7 @@
  * @copyright  2016 Racing Post
  */
 
-namespace Raspberry;
+namespace Raspberry\Database;
 
 
 class DatabaseAdapter

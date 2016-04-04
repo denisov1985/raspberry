@@ -9,15 +9,22 @@
  */
 
 namespace Raspberry;
-
+use Raspberry\Config\JsonConfig;
+use Raspberry\Database\DatabaseAdapter;
 
 class Bootstrap
 {
     private $di;
+    private static $instance;
 
     public function __construct(DependencyInjection $di)
     {
         $this->di = $di;
+        self::$instance = $this;
+    }
+
+    public function initProfiler() {
+
     }
 
     public function initConfig() {
@@ -33,5 +40,18 @@ class Bootstrap
                 $this->di->get('application.config')->database
             );
         });
+    }
+
+    public static function run(DependencyInjection $di)
+    {
+        $class = new \ReflectionClass(get_class());
+        $methods = $class->getMethods();
+        $bootstrap = new self($di);
+        foreach ($methods as $method) {
+            if (substr($method->name, 0, 4) == 'init') {
+                $reflectionMethod = new \ReflectionMethod(__NAMESPACE__ . '\Bootstrap', $method->name);
+                echo $reflectionMethod->invoke(self::$instance);
+            }
+        }
     }
 }
