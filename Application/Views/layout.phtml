@@ -1,4 +1,4 @@
-<html>
+<html ng-app="app">
 
 <head>
 
@@ -14,67 +14,146 @@
 
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
-            </form>
-        </div><!--/.navbar-collapse -->
-    </div>
-</nav>
+<!--Smooth Scroll-->
+<div class="smooth-overflow">
+    <!--Navigation-->
+    <nav class="main-header clearfix" role="navigation"> <a class="navbar-brand" href="index.html"><span class="text-blue">RASPBERRY</span><span class="text-orange">ADMIN</span></a>
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <div class="container">
-        <h1>Test!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </nav>
+
+    <!--/Navigation-->
+
+    <!--MainWrapper-->
+    <div class="main-wrap">
+
+        <!--Main Menu-->
+        <div class="responsive-admin-menu">
+            <div class="responsive-menu">ORB
+                <div class="menuicon"><i class="fa fa-angle-down"></i></div>
+            </div>
+            <ul id="menu">
+                <li class=""><a href="#" class="submenu downarrow" data-id="tables-sub" title="Tables"><i class="entypo-facebook-squared"></i><span> Facebook API</span></a>
+                    <!-- Tables Sub-Menu -->
+                    <ul id="tables-sub" class="accordion" style="display: block;">
+                        <li><a href="admin-tables.html" title="Timeline"><span> Покатушки</span></a></li>
+                        <li><a href="admin-datatables.html" title="Profile"></i><span> PHP</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--/MainMenu-->
+
+        <!--Content Wrapper-->
+        <div class="content-wrapper"><!--Horisontal Dropdown-->
+
+            <!--Breadcrumb-->
+            <div class="breadcrumb clearfix">
+                <ul>
+                    <li><a href="index.html"><i class="fa fa-home"></i></a></li>
+                    <li><a href="index.html">Facebook API</a></li>
+                    <li class="active">Покатушки</li>
+                </ul>
+            </div>
+            <!--/Breadcrumb-->
+
+            <div class="page-header">
+                <h1>Components</h1>
+            </div>
+
+            <!-- /Widgets Row End Grid-->
+        </div>
+        <!-- / Content Wrapper -->
     </div>
+    <!--/MainWrapper-->
 </div>
+<!--/Smooth Scroll-->
 
-<div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+
+<!-- scroll top -->
+<div class="scroll-top-wrapper hidden-xs">
+    <i class="fa fa-angle-up"></i>
+</div>
+<!-- /scroll top -->
+
+
+
+<!--Modals-->
+<!--Panel Question Modal-->
+<div class="modal" id="panel-question">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <i class="fa fa-question"></i> </div>
+            <div class="modal-body text-center">How Do you Do?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
-    <hr>
+<!--Power Widgets Modal-->
+<div class="modal" id="delete-widget">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <i class="fa fa-lock"></i> </div>
+            <div class="modal-body text-center">
+                <p>Are you sure to delete this widget?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="trigger-deletewidget-reset">Cancel</button>
+                <button type="button" class="btn btn-primary" id="trigger-deletewidget">Delete</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
-    <footer>
-        <p>&copy; 2015 Company, Inc.</p>
-    </footer>
-</div> <!-- /container -->
+<!--Sign Out Dialog Modal-->
+<div class="modal" id="signout">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <i class="fa fa-lock"></i> </div>
+            <div class="modal-body text-center">Are You Sure Want To Sign Out?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="yesigo">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
+<!--Lock Screen Dialog Modal-->
+<div class="modal" id="lockscreen">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <i class="fa fa-lock"></i> </div>
+            <div class="modal-body text-center">Are You Sure Want To Lock Screen?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="yesilock">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 </body>
 
 </html>
