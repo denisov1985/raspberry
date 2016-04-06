@@ -18,6 +18,7 @@ class Request
     private $cookies;
     private $server;
     private $files;
+    private $headers;
 
     public function __construct()
     {
@@ -26,6 +27,15 @@ class Request
         $this->cookies = new \Raspberry\Container($_COOKIE);
         $this->server  = new \Raspberry\Container($_SERVER);
         $this->files   = new \Raspberry\Container($_FILES);
+        $this->headers = getallheaders();
+    }
+
+    /**
+     * @return array|false
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 
     /**

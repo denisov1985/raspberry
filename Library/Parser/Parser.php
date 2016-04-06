@@ -1,5 +1,7 @@
 <?php
 
+namespace Parser;
+
 /**
  *
  *
@@ -13,7 +15,7 @@ class Parser
     const HTTP_GET  = 'GET';
     const HTTP_POST = 'POST';
 
-    public function sendRequest($url, $data = [], $method = self::HTTP_GET, $headers = [], $cookies = [])
+    public function getDocument($url, $data = [], $method = self::HTTP_GET, $headers = [], $cookies = [])
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -34,6 +36,8 @@ class Parser
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec ($ch);
         curl_close ($ch);
-        return $result;
+        $uncompressed = @gzdecode($result);
+        $document = ($uncompressed) ? $uncompressed : $result;
+        return new Document($document);
     }
 }
