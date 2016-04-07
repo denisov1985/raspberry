@@ -15,7 +15,6 @@
       "application": "/Public/assets/js/app"
     },
     "css": {
-      "bootstrap": "/Public/node_modules/bootstrap/dist/css/bootstrap.min.css",
       "main": "/Public/assets/css"
     }
   }

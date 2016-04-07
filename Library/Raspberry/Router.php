@@ -26,16 +26,23 @@ class Router
         $this->_parse();
     }
 
-    public function invoke()
+    public function invoke(Kernel $kernel)
     {
         $controllerName = $this->_getControllerName();
         $controller = new $controllerName();
         $controller->setRequest($this->request);
 
-        return call_user_func_array([
+        $data = call_user_func_array([
             $controller,
             $this->_getActionName()
         ], $this->arguments);
+
+        $view = call_user_func_array([
+            $controller,
+            'getView'
+        ], []);
+
+        return array_merge($data, $view);
     }
 
     private function _getControllerName() {

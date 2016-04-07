@@ -37,4 +37,13 @@ class Template extends Container
         return $this->content;
     }
 
+    public function get($key, $default)
+    {
+        try {
+            return $this->$key;
+        }   catch (\Exception $e) {
+            return $default;
+        }
+    }
+
 }

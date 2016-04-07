@@ -14,6 +14,23 @@ use Raspberry\Http\Request;
 class Controller
 {
     private $request;
+    private $view = [];
+
+    /**
+     * @return mixed
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
+     * @param mixed $view
+     */
+    public function setView($key, $view)
+    {
+        $this->view[$key] = $view;
+    }
 
     /**
      * @return mixed

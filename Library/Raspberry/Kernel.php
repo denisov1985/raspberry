@@ -40,9 +40,18 @@ class Kernel
 
         $this->router = new Router($request);
         $this->view   = new View($this->router, $this->di);
-        $this->data   = $this->router->invoke();
+        $this->data   = $this->router->invoke($this);
+
         $content = $this->view->render($this->data);
         return new Response($content);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getView()
+    {
+        return $this->view;
     }
 
 }

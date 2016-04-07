@@ -29,9 +29,8 @@ class View
     {
         $template = new Template($this, $data);
         $content = $template->render();
-        $layout = new Layout($this, [
-            'content' => $content
-        ]);
+        $data['content'] = $content;
+        $layout = new Layout($this, $data);
 
         return $layout->render();
     }
