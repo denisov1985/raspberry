@@ -46,7 +46,7 @@ class Router
     }
 
     private function _getControllerName() {
-        return sprintf('%sController', strtolower($this->controller));
+        return sprintf('%sController', ucfirst(strtolower($this->controller)));
     }
 
     private function _getActionName() {

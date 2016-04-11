@@ -11,6 +11,8 @@
 
 namespace Raspberry\Http;
 
+use Raspberry\Debug;
+
 class Request
 {
     private $get;
@@ -28,6 +30,32 @@ class Request
         $this->server  = new \Raspberry\Container($_SERVER);
         $this->files   = new \Raspberry\Container($_FILES);
         $this->headers = getallheaders();
+    }
+
+    public function setError(\Exception $e)
+    {
+        $this->get->_url = '/error/index';
+
+        $data = [];
+        foreach ($e->getTrace() as $key => $error) {
+
+            $data[$key]['file'] = @$error['file'];
+            $data[$key]['line'] = @$error['line'];
+            $data[$key]['function'] = @$error['function'];
+            $data[$key]['class'] = @$error['class'];
+        }
+        $this->post->_error = [
+            'message' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'trace' => $data,
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ];
+    }
+
+    public function getError()
+    {
+        return $this->post->_error;
     }
 
     /**

@@ -37,13 +37,21 @@ class Kernel
      */
     public function handle(Request $request)
     {
+        try {
+            $content = $this->_processRequest($request);
+        }   catch (\Exception $e) {
+            $request->setError($e);
+            $content = $this->_processRequest($request);
+        }
+        return new Response($content);
+    }
 
+    private function _processRequest(Request $request)
+    {
         $this->router = new Router($request);
         $this->view   = new View($this->router, $this->di);
         $this->data   = $this->router->invoke($this);
-
-        $content = $this->view->render($this->data);
-        return new Response($content);
+        return $this->view->render($this->data);
     }
 
     /**

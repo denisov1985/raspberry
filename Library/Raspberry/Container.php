@@ -32,8 +32,15 @@ class Container implements \Iterator
     /**
      * @return mixed
      */
-    public function get()
+    public function get($key = null, $default = '')
     {
+        if (isset($key)) {
+            if (isset($this->data[$key])) {
+                return $this->data[$key];
+            }   else  {
+                return $default;
+            }
+        }
         return $this->data;
     }
 

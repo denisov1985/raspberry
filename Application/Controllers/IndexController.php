@@ -17,23 +17,6 @@ class IndexController extends BaseController
     {
         $this->setTitle('Facebook API management');
 
-        $page = rand(1, 2);
-
-        for ($i = 1; $i < 5; $i++) {
-            $content = file_get_contents('https://api.flickr.com/services/rest?extras=can_addmeta%2Ccan_comment%2Ccan_download%2Ccan_share%2Ccontact%2Ccount_comments%2Ccount_faves%2Ccount_views%2Cdate_taken%2Cdate_upload%2Cdescription%2Cicon_urls_deep%2Cisfavorite%2Cispro%2Clicense%2Cmedia%2Cneeds_interstitial%2Cowner_name%2Cowner_datecreate%2Cpath_alias%2Crealname%2Crotation%2Csafety_level%2Csecret_k%2Csecret_h%2Curl_c%2Curl_f%2Curl_h%2Curl_k%2Curl_l%2Curl_m%2Curl_n%2Curl_o%2Curl_q%2Curl_s%2Curl_sq%2Curl_t%2Curl_z%2Cvisibility%2Cvisibility_source%2Co_dims%2Cis_marketplace_printable%2Cis_marketplace_licensable%2Cpubliceditability&per_page=25&page=' . $page . '&get_user_info=1&primary_photo_extras=url_c%2C%20url_h%2C%20url_k%2C%20url_l%2C%20url_m%2C%20url_n%2C%20url_o%2C%20url_q%2C%20url_s%2C%20url_sq%2C%20url_t%2C%20url_z%2C%20needs_interstitial%2C%20can_share&jump_to=&photoset_id=72157666881826205&viewerNSID=&method=flickr.photosets.getPhotos&csrf=&api_key=4fc84fdfb27b9da757867afc53daed4e&format=json&hermes=1&hermesClient=1&reqId=24a28c81&nojsoncallback=1');
-            $photos = json_decode($content, true);
-
-            //Raspberry\Debug::prd($photos); die();
-            $img = @$photos['photoset']['photo'][rand(0, count($photos['photoset']['photo']) - 1)]['url_l_cdn'];
-            if ($img) {
-                break;
-            }
-        }
-
-        echo "<pre>";
-        print_r($photos['photoset']['photo'][rand(0, count($photos['photoset']['photo']) - 1)]);
-
-
         $fb = new Facebook\Facebook([
             'app_id' => '1590372557949606', // Replace {app-id} with your app id
             'app_secret' => 'a0318f2d84ef48b57a06a008859b87d7',
@@ -42,10 +25,58 @@ class IndexController extends BaseController
 
         $helper = $fb->getRedirectLoginHelper();
 
-        $permissions = ['email']; // Optional permissions
+        $permissions = []; // Optional permissions
+        $permissions[] = 'public_profile';
+        $permissions[] = 'user_friends';
+        $permissions[] = 'email';
+        $permissions[] = 'user_about_me';
+        $permissions[] = 'user_actions.books';
+        $permissions[] = 'user_actions.fitness';
+        $permissions[] = 'user_actions.music';
+        $permissions[] = 'user_actions.news';
+        $permissions[] = 'user_actions.video';
+        $permissions[] = 'user_birthday';
+        $permissions[] = 'user_education_history';
+        $permissions[] = 'user_events';
+        $permissions[] = 'user_games_activity';
+        $permissions[] = 'user_hometown';
+        $permissions[] = 'user_likes';
+        $permissions[] = 'user_location';
+        $permissions[] = 'user_managed_groups';
+        $permissions[] = 'user_photos';
+        $permissions[] = 'user_posts';
+        $permissions[] = 'user_relationships';
+        $permissions[] = 'user_relationship_details';
+        $permissions[] = 'user_religion_politics';
+        $permissions[] = 'user_tagged_places';
+        $permissions[] = 'user_videos';
+        $permissions[] = 'user_website';
+        $permissions[] = 'user_work_history';
+        $permissions[] = 'read_custom_friendlists';
+        $permissions[] = 'read_insights';
+        $permissions[] = 'read_audience_network_insights';
+        $permissions[] = 'read_page_mailboxes';
+        $permissions[] = 'manage_pages';
+        $permissions[] = 'publish_pages';
+        $permissions[] = 'publish_actions';
+        $permissions[] = 'rsvp_event';
+        $permissions[] = 'pages_show_list';
+        $permissions[] = 'pages_manage_cta';
+        $permissions[] = 'pages_manage_instant_articles';
+        $permissions[] = 'ads_read';
+        $permissions[] = 'ads_management';
         $loginUrl = $helper->getLoginUrl('http://localhost/index/callback', $permissions);
 
         $fb->setDefaultAccessToken($_SESSION['fb_access_token']);
+
+
+        $a = $fb->get('/1135946616435982/photos?limit=200');
+        $arr = $a->getDecodedBody()['data'];
+        $x = array_rand($arr);
+
+        $a = $fb->get('/' . $arr[$x]['id'] . '?fields=images');
+        $arr = $a->getDecodedBody();
+        $img = $arr['images'][0]['source'];
 
         $linkData = [
             'link' => 'http://velokyiv.com/forum/viewtopic.php?f=1&t=160940',
