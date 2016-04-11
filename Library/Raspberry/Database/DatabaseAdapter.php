@@ -11,6 +11,9 @@
 namespace Raspberry\Database;
 
 
+use Raspberry\Debug;
+use Raspberry\Model;
+
 class DatabaseAdapter
 {
     private $connection;
@@ -36,21 +39,22 @@ class DatabaseAdapter
     {
         $sql = "CREATE TABLE IF NOT EXISTS $tableName (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $parts = [];
-        foreach ($fields as $field) {
-            $parts[] = sprintf('%s %s%s COLLATE \'utf8_general_ci\' NULL', $field['name'], $field['type'], isset($field['size']) ? '(' . $field['size'] . ')' : '');
+        foreach ($fields as $fieldName => $field) {
+            $parts[] = sprintf('%s %s%s COLLATE \'utf8_general_ci\' NULL', $fieldName, $field['type'], isset($field['size']) ? '(' . $field['size'] . ')' : '');
 
         }
         $sql .= implode(', ', $parts) . ')';
-        $this->connection->exec($sql);
+        $this->query($sql);
     }
 
     public function clearTable($table) {
         $sql = 'TRUNCATE TABLE ' . $table;
-        $this->connection->exec($sql);
+        $this->query($sql);
     }
 
     public function insert($table, $data = [])
     {
+
         $default = ['id' => 'NULL'];
         $data = array_merge($default, $data);
 
@@ -67,7 +71,26 @@ class DatabaseAdapter
         }
 
         $sql .= sprintf('(%s) VALUES (%s)', implode(', ', $fields), implode(', ', $values));
-        $this->connection->exec($sql);
+        $this->query($sql);
+    }
+
+    public function update($table, $data, $where)
+    {
+        $sql = "UPDATE $table SET ";
+        $values = [];
+        foreach ($data as $key => $value) {
+            $fields[] = $key;
+            $value = str_ireplace("'", "''", $value);
+            $values[] = "$key = '$value'";
+        }
+        $sql .= implode(', ', $values);
+        $sql .= ' WHERE ';
+        $data = [];
+        foreach ($where as $key => $value) {
+            $data[] = "$key = '$value'";
+        }
+        $sql .= implode(' AND ', $data);
+        $this->query($sql);
     }
 
     public function select($table, $where = [])
@@ -80,13 +103,23 @@ class DatabaseAdapter
                 $data[] = "$key = '$value'";
             }
             $sql .= implode(' AND ', $data);
+            $this->query($sql);
         }
 
         $collection = [];
-        $result = $this->connection->query($sql, \PDO::FETCH_ASSOC);
+        $result = $this->query($sql, \PDO::FETCH_ASSOC);
         foreach ($result as $row) {
-            $collection[] = $row;
+            $collection[] = new \AppModel($row);
         }
         return $collection;
+    }
+
+    public function query($sql, $type = \PDO::FETCH_ASSOC)
+    {
+        try {
+            return $this->connection->query($sql, $type);
+        }  catch (\Exception $e) {
+            throw new \Exception($e->getMessage() . ' ' . PHP_EOL . $sql);
+        }
     }
 }

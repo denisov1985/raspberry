@@ -55,6 +55,22 @@ class Kernel
     }
 
     /**
+     * @return DependencyInjection
+     */
+    public function getDi()
+    {
+        return $this->di;
+    }
+
+    /**
+     * @param DependencyInjection $di
+     */
+    public function setDi($di)
+    {
+        $this->di = $di;
+    }
+
+    /**
      * @return mixed
      */
     public function getView()

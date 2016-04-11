@@ -12,6 +12,7 @@ use Raspberry\Kernel;
 use Raspberry\Http\Request;
 use Raspberry\DependencyInjection;
 session_start();
+
 define('ROOT_DIR', realpath('..'));
 define('APP_DIR', realpath('../Application'));
 

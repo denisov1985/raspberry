@@ -14,6 +14,23 @@ use Raspberry\Http\Request;
 class Controller
 {
     private $request;
+    private $di;
+
+    /**
+     * @return mixed
+     */
+    public function getDi()
+    {
+        return $this->di;
+    }
+
+    /**
+     * @param mixed $di
+     */
+    public function setDi($di)
+    {
+        $this->di = $di;
+    }
     private $view = [];
 
     /**
@@ -46,6 +63,24 @@ class Controller
     public function setRequest(Request $request)
     {
         $this->request = $request;
+    }
+
+    public function flush(Model $model)
+    {
+        $db = $this->getDi()->get('application.database');
+        if (strtolower(get_class($model)) != "raspberry\\model") {
+            $table = str_ireplace('model', '', strtolower(get_class($model)));
+            $db = $this->getDi()->get('application.database');
+            $db->createTableIfNotExist($table, $model->getScaffold());
+        }
+
+
+
+        if (isset($model['id'])) {
+            $db->update($table, $model->getData(), ['id' => $model['id']]);
+        }   else  {
+            $db->insert($table, $model->getData());
+        }
     }
 
 

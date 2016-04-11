@@ -17,60 +17,12 @@ class IndexController extends BaseController
     {
         $this->setTitle('Facebook API management');
 
-        $fb = new Facebook\Facebook([
-            'app_id' => '1590372557949606', // Replace {app-id} with your app id
-            'app_secret' => 'a0318f2d84ef48b57a06a008859b87d7',
-            'default_graph_version' => 'v2.5',
-        ]);
-
-        $helper = $fb->getRedirectLoginHelper();
-
-        $permissions = []; // Optional permissions
-        $permissions[] = 'public_profile';
-        $permissions[] = 'user_friends';
-        $permissions[] = 'email';
-        $permissions[] = 'user_about_me';
-        $permissions[] = 'user_actions.books';
-        $permissions[] = 'user_actions.fitness';
-        $permissions[] = 'user_actions.music';
-        $permissions[] = 'user_actions.news';
-        $permissions[] = 'user_actions.video';
-        $permissions[] = 'user_birthday';
-        $permissions[] = 'user_education_history';
-        $permissions[] = 'user_events';
-        $permissions[] = 'user_games_activity';
-        $permissions[] = 'user_hometown';
-        $permissions[] = 'user_likes';
-        $permissions[] = 'user_location';
-        $permissions[] = 'user_managed_groups';
-        $permissions[] = 'user_photos';
-        $permissions[] = 'user_posts';
-        $permissions[] = 'user_relationships';
-        $permissions[] = 'user_relationship_details';
-        $permissions[] = 'user_religion_politics';
-        $permissions[] = 'user_tagged_places';
-        $permissions[] = 'user_videos';
-        $permissions[] = 'user_website';
-        $permissions[] = 'user_work_history';
-        $permissions[] = 'read_custom_friendlists';
-        $permissions[] = 'read_insights';
-        $permissions[] = 'read_audience_network_insights';
-        $permissions[] = 'read_page_mailboxes';
-        $permissions[] = 'manage_pages';
-        $permissions[] = 'publish_pages';
-        $permissions[] = 'publish_actions';
-        $permissions[] = 'rsvp_event';
-        $permissions[] = 'pages_show_list';
-        $permissions[] = 'pages_manage_cta';
-        $permissions[] = 'pages_manage_instant_articles';
-        $permissions[] = 'ads_read';
-        $permissions[] = 'ads_management';
-        $loginUrl = $helper->getLoginUrl('http://localhost/index/callback', $permissions);
-
-        $fb->setDefaultAccessToken($_SESSION['fb_access_token']);
 
 
-        $a = $fb->get('/1135946616435982/photos?limit=200');
+        //$fb->setDefaultAccessToken($_SESSION['fb_access_token']);
+
+
+        /*$a = $fb->get('/1135946616435982/photos?limit=200');
         $arr = $a->getDecodedBody()['data'];
         $x = array_rand($arr);
 
@@ -102,86 +54,34 @@ class IndexController extends BaseController
 
         echo 'Posted with id: ' . $graphNode['id'];
 
-        die();
+        die();*/
+
+        $db = $this->getDi()->get('application.database');
+        $apps = $db->select('app');
+
+        foreach ($apps as $key => $app) {
+            $facebook = new Api\Facebook\Client($app);
+            $apps[$key]['redirect_url'] = $facebook->getLoginUrl();
+        }
 
         return [
-            'loginUrl' => htmlspecialchars($loginUrl)
+            'apps' => $apps
         ];
     }
 
-    public function callbackAction()
+    public function callbackAction($appName)
     {
-        $fb = new Facebook\Facebook([
-            'app_id' => '1590372557949606', // Replace {app-id} with your app id
-            'app_secret' => 'a0318f2d84ef48b57a06a008859b87d7',
-            'default_graph_version' => 'v2.5',
-        ]);
 
-        $helper = $fb->getRedirectLoginHelper();
+        $db = $this->getDi()->get('application.database');
+        $apps = $db->select('app', ['name' => $appName]);
+        $app = array_pop($apps);
+        $facebook = new Api\Facebook\Client($app);
 
-        try {
-            $accessToken = $helper->getAccessToken();
-        } catch(Facebook\Exceptions\FacebookResponseException $e) {
-            // When Graph returns an error
-            echo 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch(Facebook\Exceptions\FacebookSDKException $e) {
-            // When validation fails or other local issues
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
-        }
+        $token = $facebook->getAccessToken();
+        $app->app_token = $token;
 
-        if (! isset($accessToken)) {
-            if ($helper->getError()) {
-                header('HTTP/1.0 401 Unauthorized');
-                echo "Error: " . $helper->getError() . "\n";
-                echo "Error Code: " . $helper->getErrorCode() . "\n";
-                echo "Error Reason: " . $helper->getErrorReason() . "\n";
-                echo "Error Description: " . $helper->getErrorDescription() . "\n";
-            } else {
-                header('HTTP/1.0 400 Bad Request');
-                echo 'Bad request';
-            }
-            exit;
-        }
-
-        // Logged in
-        echo '<h3>Access Token</h3>';
-        echo "<pre>";
-        var_dump($accessToken->getValue());
-
-        // The OAuth 2.0 client handler helps us manage access tokens
-        $oAuth2Client = $fb->getOAuth2Client();
-
-        // Get the access token metadata from /debug_token
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-        echo '<h3>Metadata</h3>';
-        var_dump($tokenMetadata);
-
-        // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateAppId('1590372557949606'); // Replace {app-id} with your app id
-        // If you know the user ID this access token belongs to, you can validate it here
-        //$tokenMetadata->validateUserId('123');
-        $tokenMetadata->validateExpiration();
-
-        if (! $accessToken->isLongLived()) {
-            // Exchanges a short-lived access token for a long-lived one
-            try {
-                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-
-                var_dump($accessToken);
-                die();
-
-            } catch (Facebook\Exceptions\FacebookSDKException $e) {
-                echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
-                exit;
-            }
-
-            echo '<h3>Long-lived</h3>';
-            var_dump($accessToken->getValue());
-        }
-
-        $_SESSION['fb_access_token'] = (string) $accessToken;
+        $this->flush($app);
+        header('Location: http://localhost/');
         die();
     }
 
@@ -191,6 +91,55 @@ class IndexController extends BaseController
         $headers = $request->getHeaders();
         print_r($headers);
 
+        die();
+    }
+
+    public function loadAction()
+    {
+        $db = $this->getDi()->get('application.database');
+        $data = [
+            'ATLAS-1' => [
+                'name'       => 'ATLAS-1',
+                'app_id'     => '1590372557949606',
+                'app_secret' => 'a0318f2d84ef48b57a06a008859b87d7',
+                'app_token'  => ''
+            ],
+            'ATLAS-2' => [
+                'name'       => 'ATLAS-2',
+                'app_id'     => '1669516096633077',
+                'app_secret' => '1cf08d2ace5dbb0a330d13afaa9194e8',
+                'app_token'  => ''
+            ],
+            'ATLAS-3' => [
+                'name'       => 'ATLAS-3',
+                'app_id'     => '1689389657978745',
+                'app_secret' => '8cb621f6e5723ba364aecfc367df1a0c',
+                'app_token'  => ''
+            ],
+            'ATLAS-4' => [
+                'name'       => 'ATLAS-4',
+                'app_id'     => '1666462593592777',
+                'app_secret' => 'da9adfac5de2e297816f72469d52e6c6',
+                'app_token'  => ''
+            ],
+            'ATLAS-5' => [
+                'name'       => 'ATLAS-5',
+                'app_id'     => '1061657327223627',
+                'app_secret' => '6f1493137f5456b555bad232f6c74866',
+                'app_token'  => ''
+            ],
+        ];
+
+        foreach ($data as $value) {
+            $result = $db->select('app', ['name' => $value['name']]);
+            if (count($result) > 0) {
+                continue;
+            }
+            $model = new AppModel($value);
+            $this->flush($model);
+        }
+
+        echo "ok";
         die();
     }
 }

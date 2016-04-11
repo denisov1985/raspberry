@@ -31,6 +31,7 @@ class Router
         $controllerName = $this->_getControllerName();
         $controller = new $controllerName();
         $controller->setRequest($this->request);
+        $controller->setDi($kernel->getDi());
 
         $data = call_user_func_array([
             $controller,
