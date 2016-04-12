@@ -1,0 +1,6 @@
+{
+    "name": "dmytro_denysov/mvc",
+    "require": {
+        "facebook/php-sdk-v4": "^5.1"
+    }
+}
