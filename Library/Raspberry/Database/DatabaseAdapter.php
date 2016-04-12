@@ -47,6 +47,20 @@ class DatabaseAdapter
         $this->query($sql);
     }
 
+    public function isTableExists($table)
+    {
+        $sql = "SELECT
+                  *
+                FROM information_schema.tables
+                WHERE table_schema = 'raspberry'
+                    AND table_name = '$table'
+                LIMIT 1;";
+        $result = $this->query($sql);
+        $rows = $result->rowCount();
+
+        return $rows > 0;
+    }
+
     public function clearTable($table) {
         $sql = 'TRUNCATE TABLE ' . $table;
         $this->query($sql);
@@ -95,6 +109,10 @@ class DatabaseAdapter
 
     public function select($table, $where = [])
     {
+        if (!$this->isTableExists($table)) {
+            return [];
+        }
+
         $sql = "SELECT * FROM $table";
         if (!empty($where)) {
             $sql .= ' WHERE ';

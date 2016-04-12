@@ -48,10 +48,12 @@ class Autoload
      */
     private function _loadByDirectory($className) {
         $fileName = $className . '.php';
+        $fileName = str_ireplace('\\', DIRECTORY_SEPARATOR, $fileName);
         $dirs     = $this->dirs;
         $dirs[]   = dirname(__DIR__);
         foreach ($dirs as $dir) {
             $filePath = realpath($dir) . DIRECTORY_SEPARATOR . $fileName;
+
             if (file_exists($filePath)) {
                 return require_once $filePath;
             }

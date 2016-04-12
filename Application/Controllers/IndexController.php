@@ -97,6 +97,7 @@ class IndexController extends BaseController
     public function loadAction()
     {
         $db = $this->getDi()->get('application.database');
+
         $data = [
             'ATLAS-1' => [
                 'name'       => 'ATLAS-1',
