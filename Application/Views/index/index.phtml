@@ -46,8 +46,8 @@
                     <tbody>
                     <?php foreach($this->apps as $app): ?>
                     <tr>
-                        <td class="text-dark-blue"><strong><a target="_blank" href="https://developers.facebook.com/apps/<?=$app->app_id?>/dashboard/"><?=$app->name?></a></strong></td>
-                        <td><a href="<?=$app->redirect_url?>" class="btn btn-warning btn-sm">Авторизация</a></td>
+                        <td class="text-dark-blue"><strong><a target="_blank" href="https://developers.facebook.com/apps/<?=$app->getAppId()?>/dashboard/"><?=$app->getName()?></a></strong></td>
+                        <td><a href="<?=$app->getRedirectUrl()?>" class="btn btn-warning btn-sm">Авторизация</a></td>
                     </tr>
                     <?php endforeach; ?>
 

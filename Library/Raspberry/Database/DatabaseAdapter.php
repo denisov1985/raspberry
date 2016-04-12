@@ -127,7 +127,7 @@ class DatabaseAdapter
         $collection = [];
         $result = $this->query($sql, \PDO::FETCH_ASSOC);
         foreach ($result as $row) {
-            $collection[] = new \AppModel($row);
+            $collection[] = $row;
         }
         return $collection;
     }

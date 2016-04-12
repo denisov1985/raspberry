@@ -24,6 +24,7 @@ class Cli
         $this->class = ucfirst($args[1]) . 'Command';
         $this->class = new $this->class();
         $this->class->setDi($this->di);
+        Model::setDi($this->di);
     }
 
     public function run()

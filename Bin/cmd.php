@@ -7,6 +7,7 @@ $loader = require realpath('../Library/Raspberry') . DIRECTORY_SEPARATOR . 'Auto
 require_once ROOT_DIR . '/vendor/autoload.php';
 $loader->registerDirs([
     APP_DIR . '/Cmd',
+    APP_DIR . '/Models',
 
 ]);
 $loader->register();

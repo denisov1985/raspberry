@@ -16,52 +16,10 @@ class IndexController extends BaseController
     public function indexAction()
     {
         $this->setTitle('Facebook API management');
-
-
-
-        //$fb->setDefaultAccessToken($_SESSION['fb_access_token']);
-
-
-        /*$a = $fb->get('/1135946616435982/photos?limit=200');
-        $arr = $a->getDecodedBody()['data'];
-        $x = array_rand($arr);
-
-        $a = $fb->get('/' . $arr[$x]['id'] . '?fields=images');
-        $arr = $a->getDecodedBody();
-        $img = $arr['images'][0]['source'];
-
-        $linkData = [
-            'link' => 'http://velokyiv.com/forum/viewtopic.php?f=1&t=160940',
-            'message' => 'Facebook API test',
-            'picture' => $img,
-            'caption' => 'Test message',
-            'description' => 'Test description',
-            'name' => 'Покатушка в Воскресенье - Гранитный Карьер Ul@senko'
-        ];
-
-        try {
-            // Returns a `Facebook\FacebookResponse` object
-            $response = $fb->post('/1133338330030144/feed', $linkData);
-        } catch(Facebook\Exceptions\FacebookResponseException $e) {
-            echo 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch(Facebook\Exceptions\FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
-        }
-
-        $graphNode = $response->getGraphNode();
-
-        echo 'Posted with id: ' . $graphNode['id'];
-
-        die();*/
-
-        $db = $this->getDi()->get('application.database');
-        $apps = $db->select('app');
-
+        $apps = AppModel::findAll();
         foreach ($apps as $key => $app) {
             $facebook = new Api\Facebook\Client($app);
-            $apps[$key]['redirect_url'] = $facebook->getLoginUrl();
+            $apps[$key]->setRedirectUrl($facebook->getLoginUrl());
         }
 
         return [

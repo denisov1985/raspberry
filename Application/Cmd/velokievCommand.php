@@ -4,6 +4,43 @@ use Raspberry\Cmd\Command;
 use Parser\Parser;
 use Parser\Document;
 
+/**
+ * Class VelokievCommand//$fb->setDefaultAccessToken($_SESSION['fb_access_token']);
+ *
+ *
+ * /*$a = $fb->get('/1135946616435982/photos?limit=200');
+ * $arr = $a->getDecodedBody()['data'];
+ * $x = array_rand($arr);
+ *
+ * $a = $fb->get('/' . $arr[$x]['id'] . '?fields=images');
+ * $arr = $a->getDecodedBody();
+ * $img = $arr['images'][0]['source'];
+ *
+ * $linkData = [
+ * 'link' => 'http://velokyiv.com/forum/viewtopic.php?f=1&t=160940',
+ * 'message' => 'Facebook API test',
+ * 'picture' => $img,
+ * 'caption' => 'Test message',
+ * 'description' => 'Test description',
+ * 'name' => 'Покатушка в Воскресенье - Гранитный Карьер Ul@senko'
+ * ];
+ *
+ * try {
+ * // Returns a `Facebook\FacebookResponse` object
+ * $response = $fb->post('/1133338330030144/feed', $linkData);
+ * } catch(Facebook\Exceptions\FacebookResponseException $e) {
+ * echo 'Graph returned an error: ' . $e->getMessage();
+ * exit;
+ * } catch(Facebook\Exceptions\FacebookSDKException $e) {
+ * echo 'Facebook SDK returned an error: ' . $e->getMessage();
+ * exit;
+ * }
+ *
+ * $graphNode = $response->getGraphNode();
+ *
+ * echo 'Posted with id: ' . $graphNode['id'];
+ *
+ * die();*/
 class VelokievCommand extends Command
 {
 
@@ -17,6 +54,8 @@ class VelokievCommand extends Command
         $link = 'http://velokyiv.com/forum/cycleplan.php?cp_forum_id=1';
         $document = $parser->getDocument($link);
 
+        die('ok');
+
         echo $link . PHP_EOL;
 
         $rows = $document->get('table.cp_table tr');
@@ -25,8 +64,8 @@ class VelokievCommand extends Command
                 continue;
             }
 
-            $day   = trim($row->find('td', 0)->innertext);
-            $time  = trim($row->find('td', 1)->innertext);
+            $day = trim($row->find('td', 0)->innertext);
+            $time = trim($row->find('td', 1)->innertext);
             $title = trim(strip_tags($row->find('td', 2)->innertext));
 
             $link = $row->find('td a', 0)->href;
@@ -54,7 +93,7 @@ class VelokievCommand extends Command
                     'trip_id' => $topicId
                 ];
                 $this->db->insert('topics', $data);
-            }   catch (Exception $e) {
+            } catch (Exception $e) {
                 print_r($data);
                 die();
             }
@@ -68,35 +107,43 @@ class VelokievCommand extends Command
         /** @var Raspberry\Database\DatabaseAdapter $db */
         $this->db = $this->getDi()->get('application.database');
 
-        $this->db->createTableIfNotExist('topics', [[
-            'name' => 'trip_name',
-            'type' => 'varchar',
-            'size' => 255
-        ], [
-            'name' => 'user_forum_id',
-            'type' => 'varchar',
-            'size' => 255
-        ], [
-            'name' => 'created_date',
-            'type' => 'date'
-        ], [
-            'name' => 'user_name',
-            'type' => 'varchar',
-            'size' => 255
-        ], [
-            'name' => 'members',
-            'type' => 'int'
-        ], [
-            'name' => 'is_shared',
-            'type' => 'int'
-        ], [
-            'name' => 'trip_id',
-            'type' => 'int'
-        ]
-
+        $this->db->createTableIfNotExist('posts', [
+            'post_name' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_link' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_image' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_date_time' => [
+                'type' => 'datetime'
+            ],
+            'post_is_published' => [
+                'type' => 'int'
+            ],
+            'post_type' => [
+                'type' => 'int'
+            ],
         ]);
 
-        //$this->db->clearTable('topics');
+        $this->db->createTableIfNotExist('posts_types', [
+            'post_type_name' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+        ]);
+
+        $entity = PostsTypesModel::find(1);
+        if (!$entity) {
+            $entity = new PostsTypesModel();
+            $entity->setPostTypeName('Вело покатушки');
+            $entity->save();
+        }
     }
 
 }

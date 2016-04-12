@@ -37,6 +37,7 @@ class Kernel
      */
     public function handle(Request $request)
     {
+        Model::setDi($this->di);
         try {
             $content = $this->_processRequest($request);
         }   catch (\Exception $e) {
