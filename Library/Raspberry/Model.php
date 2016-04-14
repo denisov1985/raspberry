@@ -111,9 +111,9 @@ class Model extends Container
         }
     }
 
-    public static function findBy($where)
+    public static function findBy($where, $order = [])
     {
-        $result = self::$db->select(self::getTableName(), $where);
+        $result = self::$db->select(self::getTableName(), $where, $order);
         $data = [];
         foreach ($result as $row) {
             $data[] = new static($row);
@@ -121,9 +121,9 @@ class Model extends Container
         return $data;
     }
 
-    public static function findAll()
+    public static function findAll($order = [])
     {
-        return self::findBy([]);
+        return self::findBy([], $order);
     }
 
     public function save()

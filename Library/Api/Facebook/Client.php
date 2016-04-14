@@ -45,15 +45,55 @@ class Client
         $this->fb->setDefaultAccessToken($data['app_token']);
     }
 
-    public function post($url, $name ='', $message = '', $caption = '', $description = '')
+    public function get()
+    {
+        // Returns a `Facebook\FacebookResponse` object
+        $response = $this->fb->get('/' . $this->target . '/feed?fields=picture,message,link');
+        return $response;
+    }
+
+    public function getPost($id)
+    {
+        // Returns a `Facebook\FacebookResponse` object
+        $response = $this->fb->get('/' . $id . '/?fields=picture,message,link');
+        return $response;
+    }
+
+    public function getPhotos()
+    {
+        // Returns a `Facebook\FacebookResponse` object 114080422328735
+        $response = $this->fb->get('/114080422328735/photos?limit=200&fields=images');
+        return $response;
+    }
+
+    public function post($url, $name ='', $message = '', $caption = '', $description = '', $picture = '')
     {
         $linkData = [
             'link' => $url,
             'message' => $message,
+            'caption' => $caption,
+            'description' => $description,
+            'name' => $name
         ];
+
+        if (!empty($picture)) {
+            $linkData['picture'] = $picture;
+        }
+
 
         // Returns a `Facebook\FacebookResponse` object
         $response = $this->fb->post('/' . $this->target . '/feed', $linkData);
+        return $response;
+    }
+
+    public function postUpdateImage($target, $imageUrl)
+    {
+        echo PHP_EOL . $imageUrl . PHP_EOL;
+        // Returns a `Facebook\FacebookResponse` object
+        $response = $this->fb->post('/' . $target, [
+            'message' => 'test update',
+            'picture' => $imageUrl
+        ]);
         return $response;
     }
 

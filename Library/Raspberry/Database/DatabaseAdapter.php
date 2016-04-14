@@ -107,7 +107,7 @@ class DatabaseAdapter
         $this->query($sql);
     }
 
-    public function select($table, $where = [])
+    public function select($table, $where = [], $order = [])
     {
         if (!$this->isTableExists($table)) {
             return [];
@@ -121,6 +121,12 @@ class DatabaseAdapter
                 $data[] = "$key = '$value'";
             }
             $sql .= implode(' AND ', $data);
+            if (!empty($order)) {
+                $sql .= 'ORDER BY ' . $order['order'];
+                if (isset($order['sort'])) {
+                    $sql .= $order['sort'];
+                }
+            }
             $this->query($sql);
         }
 
