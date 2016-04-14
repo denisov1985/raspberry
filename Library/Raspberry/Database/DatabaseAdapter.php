@@ -134,6 +134,8 @@ class DatabaseAdapter
 
     public function query($sql, $type = \PDO::FETCH_ASSOC)
     {
+
+        //header(microtime() . '__Debug: ' . $sql);
         try {
             return $this->connection->query($sql, $type);
         }  catch (\Exception $e) {

@@ -16,6 +16,23 @@ class Client
 {
     private $fb;
     private $settings;
+    private $target;
+
+    /**
+     * @return mixed
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param mixed $target
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
 
     public function __construct($data)
     {
@@ -25,6 +42,19 @@ class Client
             'app_secret' => $data['app_secret'],
             'default_graph_version' => 'v2.5',
         ]);
+        $this->fb->setDefaultAccessToken($data['app_token']);
+    }
+
+    public function post($url, $name ='', $message = '', $caption = '', $description = '')
+    {
+        $linkData = [
+            'link' => $url,
+            'message' => $message,
+        ];
+
+        // Returns a `Facebook\FacebookResponse` object
+        $response = $this->fb->post('/' . $this->target . '/feed', $linkData);
+        return $response;
     }
 
     public function getLoginUrl()

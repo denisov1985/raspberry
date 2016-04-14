@@ -17,7 +17,7 @@ class Model extends Container
     protected static $di;
     protected static $db;
 
-    public final function __construct($data = [])
+    public function __construct($data = [])
     {
         $defaultData = ['id' => null];
         if (!isset($data['id'])) {
@@ -116,7 +116,7 @@ class Model extends Container
         $result = self::$db->select(self::getTableName(), $where);
         $data = [];
         foreach ($result as $row) {
-            $data[] = new self($row);
+            $data[] = new static($row);
         }
         return $data;
     }

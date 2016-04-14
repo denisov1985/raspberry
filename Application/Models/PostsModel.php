@@ -8,10 +8,7 @@
  * @author     Dmytro Denysov dmytro.denysov@racingpost.com
  * @copyright  2016 Racing Post
  */
-
-use Raspberry\Model;
-
-class AppModel extends Model
+class PostsModel extends \Raspberry\Model
 {
 
 }

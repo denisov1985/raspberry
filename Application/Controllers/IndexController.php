@@ -30,15 +30,17 @@ class IndexController extends BaseController
     public function callbackAction($appName)
     {
 
-        $db = $this->getDi()->get('application.database');
-        $apps = $db->select('app', ['name' => $appName]);
-        $app = array_pop($apps);
+        $app = AppModel::findBy(['name' => $appName]);
+        $app = $app[0];
+
         $facebook = new Api\Facebook\Client($app);
-
         $token = $facebook->getAccessToken();
-        $app->app_token = $token;
 
-        $this->flush($app);
+        var_dump($token);
+
+        $app->setAppToken($token);
+        $app->save();
+        die();
         header('Location: http://localhost/');
         die();
     }
@@ -47,6 +49,7 @@ class IndexController extends BaseController
     {
         $request = $this->getRequest();
         $headers = $request->getHeaders();
+        echo "<pre>";
         print_r($headers);
 
         die();
@@ -96,6 +99,50 @@ class IndexController extends BaseController
             }
             $model = new AppModel($value);
             $this->flush($model);
+        }
+
+        /** @var Raspberry\Database\DatabaseAdapter $db */
+        $this->db = $this->getDi()->get('application.database');
+
+        $this->db->createTableIfNotExist('posts', [
+            'post_name' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_link' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_content' => [
+                'type' => 'text'
+            ],
+            'post_image' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+            'post_date_time' => [
+                'type' => 'datetime'
+            ],
+            'post_is_published' => [
+                'type' => 'int'
+            ],
+            'post_type' => [
+                'type' => 'int'
+            ],
+        ]);
+
+        $this->db->createTableIfNotExist('posts_types', [
+            'post_type_name' => [
+                'type' => 'varchar',
+                'size' => 255
+            ],
+        ]);
+
+        $entity = PostsTypesModel::find(1);
+        if (!$entity) {
+            $entity = new PostsTypesModel();
+            $entity->setPostTypeName('Вело покатушки');
+            $entity->save();
         }
 
         echo "ok";
