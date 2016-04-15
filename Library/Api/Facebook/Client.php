@@ -45,10 +45,10 @@ class Client
         $this->fb->setDefaultAccessToken($data['app_token']);
     }
 
-    public function get()
+    public function get($url)
     {
         // Returns a `Facebook\FacebookResponse` object
-        $response = $this->fb->get('/' . $this->target . '/feed?fields=picture,message,link');
+        $response = $this->fb->get($url);
         return $response;
     }
 
@@ -62,7 +62,7 @@ class Client
     public function getPhotos()
     {
         // Returns a `Facebook\FacebookResponse` object 114080422328735
-        $response = $this->fb->get('/114080422328735/photos?limit=200&fields=images');
+        $response = $this->fb->get('136787640055100/photos?limit=200&fields=images');
         return $response;
     }
 

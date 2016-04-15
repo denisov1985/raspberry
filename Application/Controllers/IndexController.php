@@ -15,6 +15,7 @@ class IndexController extends BaseController
 {
     public function indexAction()
     {
+        //\Raspberry\Debug::prd()
         $this->setTitle('Facebook API management');
         $apps = AppModel::findAll();
         foreach ($apps as $key => $app) {
@@ -36,7 +37,7 @@ class IndexController extends BaseController
         $facebook = new Api\Facebook\Client($app);
         $token = $facebook->getAccessToken();
 
-        var_dump($token);
+        echo $token;
 
         $app->setAppToken($token);
         $app->save();
