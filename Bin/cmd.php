@@ -15,4 +15,4 @@ use Raspberry\Cli;
 $cli = new Cli($argv);
 $cli->run();
 
-file_put_contents('logs/' . $args[1] . '.log', 'Last run: ' . date('Y-m-d H:i:s'));
+file_put_contents('logs/' . $argv[1] . '.log', 'Last run: ' . date('Y-m-d H:i:s'));
