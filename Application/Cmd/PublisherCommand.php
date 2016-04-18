@@ -14,7 +14,7 @@ class PublisherCommand extends \Raspberry\Cmd\Command
     public function run()
     {
 
-        $posts = PostsModel::findBy(['post_is_published' => '0'], ['order' => 'post_date_time']);
+        $posts = PostsModel::findBy(['post_is_published' => '0', 'group_id' => '1'], ['order' => 'post_date_time']);
         if (count($posts) == 0) {
             echo "No new posts" . PHP_EOL;
             die();

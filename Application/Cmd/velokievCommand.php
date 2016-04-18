@@ -42,6 +42,7 @@ class VelokievCommand extends Command
             $post->setPostDateTime('');
             $post->setPostIsPublished('-1');
             $post->setPostType('1');
+            $post->setGroupId('1');
             $post->save();
         }
 
