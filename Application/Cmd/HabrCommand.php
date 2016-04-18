@@ -26,15 +26,21 @@ class HabrCommand extends Command
                 continue;
             }
 
+            if ($link->text() == '' || $href == '') {
+                continue;
+            }
+
             $post = new PostsModel();
-            $post->setPostName($topic->text());
+            $post->setPostName($link->text());
             $post->setPostLink($href);
-            $post->setPostImage('');
-            $post->setPostDateTime('');
-            $post->setPostIsPublished('-1');
+            $post->setPostDateTime(date('Y-m-d H:i:s'));
+            $post->setPostIsPublished('0');
             $post->setPostType('1');
             $post->setGroupId('2');
+            $post->setPostContent($topic->find('.content')->text());
             $post->save();
+
+            echo $link->text() . PHP_EOL;
         }
 
     }
