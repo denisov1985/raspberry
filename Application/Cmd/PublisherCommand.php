@@ -21,6 +21,7 @@ class PublisherCommand extends \Raspberry\Cmd\Command
         foreach ($groups as $group) {
             $groupsData[$group->getId()] = $group;
         }
+        $groupsData[0] = $groupsData[1];
 
         $posts = PostsModel::findBy(['post_is_published' => '0'], ['order' => 'post_date_time']);
         if (count($posts) == 0) {
