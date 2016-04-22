@@ -48,6 +48,7 @@ class IndexController extends BaseController
 
     public function debugAction()
     {
+        die('ok');
         $request = $this->getRequest();
         $headers = $request->getHeaders();
         echo "<pre>";

@@ -51,10 +51,15 @@ class PublisherCommand extends \Raspberry\Cmd\Command
             // GET POST CURRENT
             $response = $facebook->getPost($id);
             $body = $response->getDecodedBody();
-            $img = file_get_contents($body['picture']);
+            if (isset($body['picture'])) {
+                $img = file_get_contents($body['picture']);
+            }   else  {
+                $img = '';
+            }
             var_dump(strlen($img));
             if (strlen($img) < 4000) {
                 $x = array_rand($arr[$groupId]);
+                print_r($arr[$groupId][$x]);
                 $picture = $arr[$groupId][$x]['images'][0]['source'];
             }   else  {
                 $picture = '';
@@ -62,6 +67,9 @@ class PublisherCommand extends \Raspberry\Cmd\Command
 
             $facebook->setTarget($groupsData[$groupId]->getExtId());
             $response = $facebook->post($post->getPostLink(), $post->getPostName(), $post->getPostContent(), '', '', $picture);
+
+            $a = $response->getDecodedBody();
+            print_r($a);
 
             echo 'Posted with id: ' . ' --- ' . $post->getPostName() . PHP_EOL;
             $post->setPostIsPublished('1');

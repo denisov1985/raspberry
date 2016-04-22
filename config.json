@@ -12,7 +12,7 @@
           "/Public/node_modules/angular-resource/angular-resource.min.js",
           "/Public/node_modules/angular-route/angular-route.min.js"
       ],
-      "application": "/Public/assets/js/app"
+      "application": "/Public/assets/js"
     },
     "css": {
       "main": "/Public/assets/css"
