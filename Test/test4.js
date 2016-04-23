@@ -47,7 +47,7 @@ page.onResourceRequested = function(requestData, networkRequest) {
         data['description'] = 'Test description';
         data['start_time'] = 20 * 60 * 60;
         data['start_date'] = '08%2F08%2F2016';
-        data['cover_id'] = '136787710055093';
+        data['cover_id'] = '152217301845467';
         var newUrl = paths[0] + '?' + mainHelper.hashMapToUrl(data);
         console.log(newUrl);
         networkRequest.changeUrl(newUrl);

@@ -29,14 +29,27 @@ class Router
     public function invoke(Kernel $kernel)
     {
         $controllerName = $this->_getControllerName();
+
+        if (!class_exists($controllerName)) {
+            throw new \Exception("Controller does not exists: " . $controllerName);
+        }
+
         $controller = new $controllerName();
         $controller->setRequest($this->request);
         $controller->setDi($kernel->getDi());
+        $action = $this->_getActionName();
+        if (!method_exists($controller, $action)) {
+            throw new \Exception("Action does not exists: " . $action);
+        }
 
         $data = call_user_func_array([
             $controller,
             $this->_getActionName()
         ], $this->arguments);
+
+        if (!is_array($data)) {
+            throw new \Exception("Controller must return a response");
+        }
 
         $view = call_user_func_array([
             $controller,
@@ -51,7 +64,17 @@ class Router
     }
 
     private function _getActionName() {
-        return sprintf('%sAction', strtolower($this->action));
+        $path = strtolower($this->action);
+        $data = explode('-', $path);
+
+        foreach ($data as $key => $value) {
+            if ($key > 0) {
+                $data[$key] = ucfirst($value);
+            }
+        }
+
+        $path = implode('', $data);
+        return sprintf('%sAction', $path);
     }
 
     private function _parse() {

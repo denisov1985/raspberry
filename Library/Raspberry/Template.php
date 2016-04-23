@@ -24,6 +24,9 @@ class Template extends Container
         $this->scripts = $assets->getJavaScripts();
         $this->css     = $assets->getCss();
         ob_start();
+        if (!file_exists($this->_getPath($view))) {
+            throw new \Exception('Template not found in: ' . $this->_getPath($view));
+        }
         include $this->_getPath($view);
         $this->content = ob_get_clean();
     }
