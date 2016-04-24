@@ -1,5 +1,6 @@
 var eventManager = new EventManager();
 eventManager.on('event.page_loaded', function() {
+    console.log('PAGE: ' + window.location.href);
     /**
      * On Login page
      */
@@ -17,6 +18,10 @@ eventManager.on('event.page_loaded', function() {
     if (window.location.href == 'https://www.facebook.com/groups/1346688292014965/events/') {
         var self = this;
         self.fire('event.page_group_events_loaded');
+    }
+
+    if (window.location.href.search('context=create&previousaction=create') >= 0) {
+        console.log('finish')
     }
 
 });

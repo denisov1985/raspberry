@@ -208,9 +208,18 @@ page.onConsoleMessage = function(msg, lineNum, sourceId) {
         page.render(name);
     }
 
+    if (msg.search('finish') == 0) {
+        page.open("http://78.27.137.156:8888/api/publish/" + post.id, function(status) {
+            setTimeout(function() {
+                phantom.exit();
+            }, 0);
+            phantom.onError = function(){};
+        });
+    }
+
     if (msg.search('exit') == 0) {
         setTimeout(function() {
-            phantom.exit(code);
+            phantom.exit();
         }, 0);
         phantom.onError = function(){};
     }

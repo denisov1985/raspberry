@@ -45,6 +45,14 @@ class ApiController extends \Raspberry\Controller
         return $result;
     }
 
+    public function publishAction($postId)
+    {
+        $post = PostsModel::find($postId);
+        $post->setPostIsPublished('1');
+        $post->save();
+        return ['id' => $postId];
+    }
+    
     public function photosAction()
     {
         $file = file_get_contents(dirname(dirname(dirname(__FILE__))) . '/Test/photos.json');
