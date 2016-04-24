@@ -111,9 +111,9 @@ class Model extends Container
         }
     }
 
-    public static function findBy($where, $order = [])
+    public static function findBy($where, $order = [], $limit = '')
     {
-        $result = self::$db->select(self::getTableName(), $where, $order);
+        $result = self::$db->select(self::getTableName(), $where, $order, $limit);
         $data = [];
         foreach ($result as $row) {
             $data[] = new static($row);
@@ -134,4 +134,5 @@ class Model extends Container
             self::$db->update($this->getTableName(), $this->get(), ['id' => $this->getId()]);
         }
     }
+
 }

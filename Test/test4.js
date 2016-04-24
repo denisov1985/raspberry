@@ -1,3 +1,125 @@
+var photos = {
+    "data": [
+        {
+            "id": "136787746721756"
+        },
+        {
+            "id": "136787740055090"
+        },
+        {
+            "id": "136787716721759"
+        },
+        {
+            "id": "136787710055093"
+        },
+        {
+            "id": "136787840055080"
+        },
+        {
+            "id": "136787810055083"
+        },
+        {
+            "id": "136788000055064"
+        },
+        {
+            "id": "136788213388376"
+        },
+        {
+            "id": "136790853388112"
+        },
+        {
+            "id": "136791203388077"
+        },
+        {
+            "id": "136791213388076"
+        },
+        {
+            "id": "136791220054742"
+        },
+        {
+            "id": "136791270054737"
+        },
+        {
+            "id": "136791290054735"
+        },
+        {
+            "id": "136791336721397"
+        },
+        {
+            "id": "152216995178831"
+        },
+        {
+            "id": "152216998512164"
+        },
+        {
+            "id": "152217005178830"
+        },
+        {
+            "id": "152217008512163"
+        },
+        {
+            "id": "152217038512160"
+        },
+        {
+            "id": "152217051845492"
+        },
+        {
+            "id": "152217055178825"
+        },
+        {
+            "id": "152217058512158"
+        },
+        {
+            "id": "152217085178822"
+        },
+        {
+            "id": "152217111845486"
+        },
+        {
+            "id": "152217115178819"
+        },
+        {
+            "id": "152217125178818"
+        },
+        {
+            "id": "152217155178815"
+        },
+        {
+            "id": "152217188512145"
+        },
+        {
+            "id": "152217191845478"
+        },
+        {
+            "id": "152217245178806"
+        },
+        {
+            "id": "152217258512138"
+        },
+        {
+            "id": "152217295178801"
+        },
+        {
+            "id": "152217301845467"
+        },
+        {
+            "id": "152217335178797"
+        }
+    ]
+};
+
+var max = photos.data.length;
+
+// использование Math.round() даст неравномерное распределение!
+function getRandomInt(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var r = getRandomInt(0, max - 1);
+
+var photoId = photos.data[r].id;
+
 var mainHelper = {
     urlToHashMap: function(url) {
         var data = url.split('?');
@@ -17,6 +139,8 @@ var mainHelper = {
         return data.join('&');
     }
 };
+
+var post = [];
 
 var page = require('webpage').create();
 page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
@@ -43,13 +167,14 @@ page.onResourceRequested = function(requestData, networkRequest) {
 
         var data = mainHelper.urlToHashMap(requestData.url);
         var paths = requestData.url.split('?');
-        data['title'] = 'Test event';
-        data['description'] = 'Test description';
-        data['start_time'] = 20 * 60 * 60;
-        data['start_date'] = '08%2F08%2F2016';
-        data['cover_id'] = '152217301845467';
+        data['title'] = post.post_name;
+        data['description'] = post.post_content;
+        data['start_time'] = post.post_time;
+        data['start_date'] = post.post_date;
+        data['cover_id'] = photoId;
         var newUrl = paths[0] + '?' + mainHelper.hashMapToUrl(data);
         console.log(newUrl);
+
         networkRequest.changeUrl(newUrl);
     }
 
@@ -157,7 +282,25 @@ page.onInitialized = function() {
 
 };
 
-page.open("http://www.facebook.com/login.php");
+page.open("http://78.27.137.156:8888/api/get-publications", function(status) {
+
+    const TEXT_PREFIX = /<html><head><\/head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">/;
+    const TEXT_SUFFIX = /<\/pre><\/body><\/html>/;
+
+    var content = page.content;
+
+    if (TEXT_PREFIX.test(content) && TEXT_SUFFIX.test(content)) {
+        content = content.replace(TEXT_PREFIX, '').replace(TEXT_SUFFIX, '');
+    }
+
+    post = JSON.parse(content);
+
+    console.log('Content: ' +  JSON.stringify(post, undefined, 4));
+    console.log(status);
+
+    page.open("http://www.facebook.com/login.php");
+});
+//page.open("http://www.facebook.com/login.php");
 
 setTimeout(function() {
     phantom.exit();

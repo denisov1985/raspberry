@@ -27,6 +27,14 @@ class View
 
     public function render($data)
     {
+        $contentType = $data['content_type'];
+        unset($data['content_type']);
+
+        if ($contentType == Controller::CONTENT_JSON) {
+            header('Content-Type: application/json');
+            return json_encode($data);
+        }
+
         $template = new Template($this, $data);
         $content = $template->render();
         $data['content'] = $content;

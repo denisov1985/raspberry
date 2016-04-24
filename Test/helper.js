@@ -37,7 +37,6 @@ var waitFor = {
         var interval = setInterval(function() {
             var classObj = helper.getByClass(className, count);
             console.log(className, typeof classObj);
-            helper.makeScreen('tae screen');
             if (typeof classObj != 'undefined') {
                 callback();
                 clearInterval(interval);

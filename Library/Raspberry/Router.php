@@ -51,6 +51,8 @@ class Router
             throw new \Exception("Controller must return a response");
         }
 
+        $data['content_type'] = $controller->getContentType();
+
         $view = call_user_func_array([
             $controller,
             'getView'

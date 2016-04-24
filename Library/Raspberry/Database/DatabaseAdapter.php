@@ -107,7 +107,7 @@ class DatabaseAdapter
         $this->query($sql);
     }
 
-    public function select($table, $where = [], $order = [])
+    public function select($table, $where = [], $order = [], $limit = '')
     {
         if (!$this->isTableExists($table)) {
             return [];
@@ -118,14 +118,17 @@ class DatabaseAdapter
             $sql .= ' WHERE ';
             $data = [];
             foreach ($where as $key => $value) {
-                $data[] = "$key = '$value'";
+                $data[] = "$key='$value'";
             }
             $sql .= implode(' AND ', $data);
             if (!empty($order)) {
                 $sql .= 'ORDER BY ' . $order['order'];
                 if (isset($order['sort'])) {
-                    $sql .= $order['sort'];
+                    $sql .= ' ' . $order['sort'];
                 }
+            }
+            if (!empty($limit)) {
+                $sql .= ' LIMIT ' . $limit;
             }
             $this->query($sql);
         }

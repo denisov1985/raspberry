@@ -13,8 +13,28 @@ use Raspberry\Http\Request;
 
 class Controller
 {
+    const CONTENT_HTML = 'html';
+    const CONTENT_JSON = 'json';
+
+    /**
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param string $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
     private $request;
     private $di;
+    private $contentType = self::CONTENT_HTML;
 
     /**
      * @return mixed
