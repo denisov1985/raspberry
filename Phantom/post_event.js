@@ -110,7 +110,7 @@ var photos = {
 
 var max = photos.data.length;
 
-// использование Math.round() даст неравномерное распределение!
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Math.round() пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!
 function getRandomInt(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -303,6 +303,12 @@ page.open("http://78.27.137.156:8888/api/get-publications", function(status) {
     }
 
     post = JSON.parse(content);
+
+    if (post.length == 0) {
+        setTimeout(function() {
+            phantom.exit();
+        }, 100);
+    }
 
     console.log('Content: ' +  JSON.stringify(post, undefined, 4));
     console.log(status);
