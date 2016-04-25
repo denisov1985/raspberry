@@ -302,6 +302,8 @@ page.open("http://78.27.137.156:8888/api/get-publications", function(status) {
         content = content.replace(TEXT_PREFIX, '').replace(TEXT_SUFFIX, '');
     }
 
+
+
     post = JSON.parse(content);
 
     if (post.length == 0) {
