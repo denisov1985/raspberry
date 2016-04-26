@@ -18,7 +18,7 @@ class ApiController extends \Raspberry\Controller
     {
         $publications = PostsModel::findBy([
             'post_is_published' => 0,
-            'group_id' => 1,
+            'group_id' => 0,
             'post_date_time >' => date('Y-m-d H:i:s')
         ], ['order' => 'post_date_time', 'sort' => 'ASC'], 1);
 
