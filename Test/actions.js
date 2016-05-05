@@ -3,8 +3,8 @@
  */
 var actions = {
     login: function() {
-        document.getElementById("email").value = "";
-        document.getElementById("pass").value = "";
+        document.getElementById("email").value = "makrosnik2@gmail.com";
+        document.getElementById("pass").value = "Rjpthju1";
         document.getElementById("loginbutton").click();
     }
 };
