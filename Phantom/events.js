@@ -20,7 +20,7 @@ eventManager.on('event.page_loaded', function() {
         self.fire('event.page_group_events_loaded');
     }
 
-    if (window.location.href.search('context=create&previousaction=create') >= 0) {
+    if (window.location.href.search('https://www.facebook.com/events/') >= 0) {
         console.log('finish')
     }
 
